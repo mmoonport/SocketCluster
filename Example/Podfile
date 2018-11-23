@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'SocketCluster_Example' do
+  pod 'SocketCluster', :path => '../'
+
+  target 'SocketCluster_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
