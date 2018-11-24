@@ -1,0 +1,23 @@
+PODS:
+  - jetfire (0.1.5)
+  - SocketCluster (0.1.0):
+    - jetfire
+
+DEPENDENCIES:
+  - SocketCluster (from `../`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - jetfire
+
+EXTERNAL SOURCES:
+  SocketCluster:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  jetfire: 60c16cd6ae0282928e24203eb93f03b89c1929ce
+  SocketCluster: e672641d9d07499bbb421b85b9c77b4a41619ca3
+
+PODFILE CHECKSUM: 853c6a6b93d0f9a79fba9b0ec5814e11565bb921
+
+COCOAPODS: 1.5.3
