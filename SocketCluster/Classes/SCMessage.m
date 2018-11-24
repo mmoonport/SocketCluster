@@ -8,6 +8,7 @@
 
 #import "SCMessage.h"
 #import "SCSocket.h"
+#import "SCChannel.h"
 #import "SCMessageHandler.h"
 
 @implementation SCMessage

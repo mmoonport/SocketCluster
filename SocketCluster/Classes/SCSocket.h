@@ -6,9 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SCSocketOld.h"
-#import "SCMessage.h"
-#import "SCChannel.h"
 
 @class JFRWebSocket;
 @protocol JFRWebSocketDelegate;

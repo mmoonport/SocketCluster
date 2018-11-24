@@ -3,7 +3,6 @@
 //
 
 #import "SCMessageHandler.h"
-#import "SCSocket.h"
 
 
 NSString *PING_MESSAGE = @"#1";
@@ -171,11 +170,9 @@ NSString *DISCONNECT = @"#disconnect";
 - (void)restoreConnection
 {
     for (SCChannel *channel in self.channels) {
-
         if (channel.state == CHANNEL_STATE_SUBSCRIBED) {
             [self.socket emit:@"#subscribe" data:@{@"channel": [channel getName]}];
         }
-
     }
 
     for (SCMessage *message in self.messages) {

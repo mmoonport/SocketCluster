@@ -7,10 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SCMessage.h"
-#import "SCSocket.h"
 
 @class SCMessage;
+@class SCSocket;
 
 typedef void(^SCChannelSubscribeHandler)(_Nullable id response);
 

@@ -9,6 +9,7 @@
 #import "JFRWebSocket.h"
 #import "SCMessageHandler.h"
 #import "NSDictionary+SocketCluster.h"
+#import "SCChannel.h"
 
 @interface SCSocket ()<JFRWebSocketDelegate>
 @property (nonatomic, strong) JFRWebSocket *socket;

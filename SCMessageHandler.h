@@ -3,11 +3,8 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@class SCSocket;
 @class SCChannel;
 @class SCMessage;
-
 @interface SCMessageHandler : NSObject
 @property (nonatomic, strong) NSMutableArray<SCChannel *> *channels;
 @property (nonatomic, strong) NSMutableArray<SCMessage *> *messages;
