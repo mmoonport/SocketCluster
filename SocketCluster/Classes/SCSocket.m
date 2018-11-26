@@ -8,8 +8,9 @@
 #import "SCSocket.h"
 #import "JFRWebSocket.h"
 #import "SCMessageHandler.h"
-#import "NSDictionary+SocketCluster.h"
 #import "SCChannel.h"
+#import "SCMessage.h"
+
 
 @interface SCSocket ()<JFRWebSocketDelegate>
 @property (nonatomic, strong) JFRWebSocket *socket;
@@ -23,18 +24,15 @@
 #pragma mark - Public Methods
 
 @synthesize eventWatchers;
+@synthesize isConnected;
 
-- (instancetype)initWithURL:(NSString *)url isSecure:(BOOL)secure
+- (instancetype)init
 {
     self = [super init];
     if (self) {
-        NSString *prefix = secure ? @"wss" : @"ws";
         self.reconnectTimeout = 5;
         self.maxReconnectTimeout = 10;
-        self.url = [[NSURL new] initWithString:[NSString stringWithFormat:@"%@://%@?transport=websocket", prefix, url]];
         self.messageHandler = [[SCMessageHandler alloc] initWithSocketCluster:self];
-        self.socket = [[JFRWebSocket alloc] initWithURL:self.url protocols:@[]];
-        self.socket.delegate = self;
         eventWatchers = [NSMutableDictionary<NSString *, NSMutableArray<SCDataHandler> *> new];
 
     }
@@ -42,11 +40,42 @@
     return self;
 }
 
+- (instancetype)initWithURL:(NSString *)url isSecure:(BOOL)secure
+{
+    self = [super init];
+    if (self) {
+        [self connectWithURL:url isSecure:secure];
+    }
+
+    return self;
+}
+
++ (SCSocket *)sharedClient
+{
+    static SCSocket *_instance = nil;
+
+    @synchronized (self) {
+        if (_instance == nil) {
+            _instance = [[self alloc] init];
+        }
+    }
+
+    return _instance;
+}
+
 - (BOOL)isConnected
 {
     return self.socket && self.socket.isConnected;
 }
 
+- (void)connectWithURL:(NSString *)url isSecure:(BOOL)secure
+{
+    NSString *prefix = secure ? @"wss" : @"ws";
+    self.url = [[NSURL new] initWithString:[NSString stringWithFormat:@"%@://%@?transport=websocket", prefix, url]];
+    self.socket = [[JFRWebSocket alloc] initWithURL:self.url protocols:@[]];
+    self.socket.delegate = self;
+    [self connect];
+}
 
 - (void)connect
 {
@@ -217,7 +246,7 @@
 
             BOOL isAuthenticated = [response[@"isAuthenticated"] boolValue];
             NSString *idx = [response objectForKey:@"id"];
-            if ([idx isKindOfClass:[NSString class]] && isAuthenticated != nil) {
+            if ([idx isKindOfClass:[NSString class]]) {
                 self.socketId = idx;
                 self.isAuthenticated = isAuthenticated;
 

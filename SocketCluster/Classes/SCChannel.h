@@ -7,20 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "handlers.h"
 
-@class SCMessage;
 @class SCSocket;
-
-typedef void(^SCChannelSubscribeHandler)(_Nullable id response);
-
-typedef void(^SCChannelKickOutHandler)(_Nullable id response);
-
-
-typedef void(^SCChannelUnsubscribeHandler)(void);
-
-typedef void(^SCChannelSubscribeFailHandler)(NSError *_Nullable error, _Nullable id response);
-
-
+@class SCMessage;
 typedef enum _CHANNEL_STATE
 {
 
@@ -38,9 +28,8 @@ typedef enum _CHANNEL_STATE
 
 @end
 
-
 @interface SCChannel : NSObject
-
+@property (weak, nonatomic) SCSocket *socket;
 @property (weak, nonatomic) _Nullable id<SCChannelDelegate> delegate;
 
 @property (nonatomic, copy) _Nullable SCChannelUnsubscribeHandler onUnsubscribe;

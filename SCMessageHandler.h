@@ -3,6 +3,7 @@
 //
 
 #import <Foundation/Foundation.h>
+@class SCSocket;
 @class SCChannel;
 @class SCMessage;
 @interface SCMessageHandler : NSObject
@@ -15,11 +16,11 @@
 
 - (void)didReceiveData:(NSData *)data;
 
-- (SCMessage *)messageForID:(NSInteger)rid;
+- (SCMessage *)messageForID:(NSString *)rid;
 
 - (SCChannel *)channelForName:(NSString *)name;
 
-- (SCChannel *)channelForID:(NSInteger)rid;
+- (SCChannel *)channelForID:(NSString *)rid;
 
 - (void)restoreConnection;
 @end

@@ -3,7 +3,9 @@
 //
 
 #import "SCMessageHandler.h"
-
+#import "SCSocket.h"
+#import "SCChannel.h"
+#import "SCMessage.h"
 
 NSString *PING_MESSAGE = @"#1";
 NSString *SET_AUTH = @"#setAuthToken";
@@ -46,7 +48,7 @@ NSString *DISCONNECT = @"#disconnect";
         return;
     }
 
-    NSInteger rid = [[dictionary valueForKey:@"rid"] integerValue];
+    NSString *rid = [[dictionary valueForKey:@"rid"] stringValue];
     id errorData = dictionary[@"error"];
     NSDictionary *response = dictionary[@"data"];
     NSString *event = [dictionary[@"eventName"] stringValue];
@@ -106,7 +108,7 @@ NSString *DISCONNECT = @"#disconnect";
         [self.socket handleWatchers:event data:response error:errorData];
 
         if ([self.socket.delegate conformsToProtocol:@protocol(SCSocketDelegate)]) {
-            if ([self.socket.delegate respondsToSelector:@selector(socketClusterDidReceiveData)]) {
+            if ([self.socket.delegate respondsToSelector:@selector(socketClusterDidReceiveData:)]) {
                 [self.socket.delegate socketClusterDidReceiveData:(id) response];
             }
         }
@@ -152,7 +154,7 @@ NSString *DISCONNECT = @"#disconnect";
     }
 }
 
-- (SCMessage *)messageForID:(NSInteger)rid
+- (SCMessage *)messageForID:(NSString *)rid
 {
     return self.messages[[[self.messages valueForKey:@"cid"] indexOfObject:rid]];
 }
@@ -162,7 +164,7 @@ NSString *DISCONNECT = @"#disconnect";
     return self.channels[[[self.channels valueForKey:@"name"] indexOfObject:name]];
 }
 
-- (SCChannel *)channelForID:(NSInteger)rid
+- (SCChannel *)channelForID:(NSString *)rid
 {
     return self.channels[[[self.channels valueForKey:@"cid"] indexOfObject:rid]];
 }

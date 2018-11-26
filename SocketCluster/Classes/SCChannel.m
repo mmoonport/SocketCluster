@@ -8,13 +8,12 @@
 
 #import "SCChannel.h"
 #import "SCSocket.h"
-
+#import "SCMessage.h"
 #import "SCMessageHandler.h"
 
 @implementation SCChannel
 {
     NSString *channelName;
-    SCSocket *socket;
     NSMutableArray<SCDataHandler> *onDataBlocks;
 
 }
@@ -25,7 +24,7 @@
     if (self) {
 
         channelName = name;
-        socket = ws;
+        _socket = ws;
         onDataBlocks = [NSMutableArray new];
     }
     return self;
@@ -39,7 +38,7 @@
 
 - (SCMessage *)message:(id)data
 {
-    SCMessage *message = [[SCMessage alloc] initWithSocket:socket andEventName:nil andData:data];
+    SCMessage *message = [[SCMessage alloc] initWithSocket:_socket andEventName:nil andData:data];
     message.channel = self;
     return message;
 }
@@ -71,10 +70,10 @@
 
 - (void)unsubscribe
 {
-    if ([socket.messageHandler channelForName:[self getName]]) {
-        SCMessage *message = [[SCMessage alloc] initWithSocket:socket andEventName:@"#unsubscribe" andData:[self getName]];
+    if ([_socket.messageHandler channelForName:[self getName]]) {
+        SCMessage *message = [[SCMessage alloc] initWithSocket:_socket andEventName:@"#unsubscribe" andData:[self getName]];
         message.onSuccess = ^(SCMessage *message, id response) {
-            [socket.messageHandler.channels removeObject:self];
+            [self->_socket.messageHandler.channels removeObject:self];
             if (self.onUnsubscribe) {
                 self.onUnsubscribe();
             }
@@ -86,13 +85,13 @@
 
 - (NSString *)subscribe
 {
-    if ([socket.messageHandler channelForName:[self getName]]) {
-        [socket.messageHandler.channels removeObject:self];
+    if ([_socket.messageHandler channelForName:[self getName]]) {
+        [_socket.messageHandler.channels removeObject:self];
     }
 
-    SCMessage *message = [[SCMessage alloc] initWithSocket:socket andEventName:@"#subscribe" andData:[self getName]];
+    SCMessage *message = [[SCMessage alloc] initWithSocket:_socket andEventName:@"#subscribe" andData:[self getName]];
     message.onSuccess = ^(SCMessage *message, id response) {
-        [socket.messageHandler.channels addObject:self];
+        [self->_socket.messageHandler.channels addObject:self];
         if (self.onSubscribe) {
             self.onSubscribe(response);
         }
@@ -105,7 +104,7 @@
 
 - (SCMessage *)publishMessage:(id)data onSuccess:(SCMessageSentHandler)success onFail:(SCMessageSendFailHandler)fail
 {
-    SCMessage *msg = [[SCMessage alloc] initWithSocket:socket andEventName:nil andData:data];
+    SCMessage *msg = [[SCMessage alloc] initWithSocket:_socket andEventName:nil andData:data];
     msg.onSuccess = success;
     msg.onFail = fail;
     [msg sendToChannel:self];

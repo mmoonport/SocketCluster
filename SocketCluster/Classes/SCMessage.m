@@ -10,7 +10,6 @@
 #import "SCSocket.h"
 #import "SCChannel.h"
 #import "SCMessageHandler.h"
-
 @implementation SCMessage
 
 - (instancetype)initWithSocket:(SCSocket *)socket andEventName:(nullable NSString *)eventName andData:(nullable id)data

@@ -7,25 +7,20 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@class SCChannel;
+#import "handlers.h"
 @class SCSocket;
-
-typedef void(^SCMessageSentHandler)(_Nonnull id message, _Nullable id response);
-
-typedef void(^SCMessageSendFailHandler)(_Nonnull id message, _Nullable id response);
-
+@class SCChannel;
 
 @interface SCMessage : NSObject
-@property (nonatomic, strong) SCSocket *socket;
+@property (nonatomic, weak) SCSocket *socket;
 @property NSString *cid;
 
-@property (nonatomic, strong) SCChannel *_Nullable channel;
+@property (nonatomic, weak) SCChannel *_Nullable channel;
 @property (nonatomic, strong) NSString *_Nullable eventName;
 @property (nonatomic, strong) _Nullable id data;
 
-@property (nonatomic, copy) _Nullable SCMessageSentHandler onSuccess;
-@property (nonatomic, copy) _Nullable SCMessageSentHandler onFail;
+@property (nonatomic, strong) SCMessageSentHandler onSuccess;
+@property (nonatomic, strong) SCMessageSentHandler onFail;
 
 
 @property (nonatomic, strong) NSDictionary *event;
