@@ -44,7 +44,7 @@
 {
     self = [super init];
     if (self) {
-        [self connectWithURL:url isSecure:secure];
+        [self setupWithURL:url isSecure:secure];
     }
 
     return self;
@@ -70,11 +70,21 @@
 
 - (void)connectWithURL:(NSString *)url isSecure:(BOOL)secure
 {
+    [self setupWithURL:url isSecure:secure];
+    [self connect];
+}
+
+- (void)setupWithURL:(NSString *)url isSecure:(BOOL)secure
+{
     NSString *prefix = secure ? @"wss" : @"ws";
     self.url = [[NSURL new] initWithString:[NSString stringWithFormat:@"%@://%@?transport=websocket", prefix, url]];
     self.socket = [[JFRWebSocket alloc] initWithURL:self.url protocols:@[]];
     self.socket.delegate = self;
-    [self connect];
+}
+
+- (void)addHeader:(NSString *)value forKey:(NSString *)key
+{
+    [self.socket addHeader:value forKey:key];
 }
 
 - (void)connect
@@ -157,7 +167,7 @@
 
 - (void)login:(nullable NSDictionary *)data withSuccess:(SCMessageSentHandler)success withFail:(SCMessageSendFailHandler)fail
 {
-    SCMessage *message = [[SCMessage alloc] initWithSocket:self andEventName:@"login" andData:data];
+    SCMessage *message = [self message:@"login" data:data];
     message.onSuccess = success;
     message.onFail = fail;
     [message send];

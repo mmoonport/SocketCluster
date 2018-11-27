@@ -44,8 +44,15 @@
 
 - (instancetype)initWithURL:(NSString *)url isSecure:(BOOL)secure;
 
++ (SCSocket *)sharedClient;
+
+- (void)addHeader:(NSString *)value forKey:(NSString *)key;
+
 - (void)connect;
 - (void)connectWithURL:(NSString *)url isSecure:(BOOL)secure;
+
+- (void)setupWithURL:(NSString *)url isSecure:(BOOL)secure;
+
 - (void)disconnect;
 - (void)pause;
 

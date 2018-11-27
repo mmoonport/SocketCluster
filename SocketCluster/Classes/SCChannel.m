@@ -48,12 +48,17 @@
     if (![onDataBlocks containsObject:handler]) {
         [onDataBlocks addObject:handler];
     }
-
+    if (self.state != CHANNEL_STATE_PENDING) {
+        [self subscribe];
+    }
 }
 
 - (void)unwatch:(SCDataHandler)handler
 {
     [onDataBlocks removeObject:handler];
+    if (![onDataBlocks count]) {
+        [self unsubscribe];
+    }
 }
 
 - (void)callOnData:(id)error response:(id)response
